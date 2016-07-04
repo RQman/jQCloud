@@ -30,6 +30,7 @@
     this.word_array = word_array || [];
     this.options = options;
 
+    this.resizeHandler = null;
     this.sizeGenerator = null;
     this.colorGenerator = null;
 
@@ -169,7 +170,8 @@
 
       // Attach window resize event
       if (this.options.autoResize) {
-        $(window).on('resize', throttle(this.resize, 50, this));
+        this.resizeHandler = throttle(this.resize, 50, this);
+        $(window).on('resize', this.resizeHandler);
       }
     },
 
@@ -439,6 +441,10 @@
 
     // Destroy any data and objects added by the plugin
     destroy: function() {
+      if (this.options.autoResize) {
+        $(window).off('resize', this.resizeHandler);
+      }
+
       this.clearTimeouts();
       this.$element.removeClass('jqcloud');
       this.$element.removeData('jqcloud');
