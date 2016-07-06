@@ -30,7 +30,6 @@
     this.word_array = word_array || [];
     this.options = options;
 
-    this.resizeHandler = null;
     this.sizeGenerator = null;
     this.colorGenerator = null;
 
@@ -170,8 +169,7 @@
 
       // Attach window resize event
       if (this.options.autoResize) {
-        this.resizeHandler = throttle(this.resize, 50, this);
-        $(window).on('resize', this.resizeHandler);
+        $(window).on('resize.' + this.data.namespace, throttle(this.resize, 50, this));
       }
     },
 
@@ -442,7 +440,7 @@
     // Destroy any data and objects added by the plugin
     destroy: function() {
       if (this.options.autoResize) {
-        $(window).off('resize', this.resizeHandler);
+        $(window).off('resize.' + this.data.namespace);
       }
 
       this.clearTimeouts();
